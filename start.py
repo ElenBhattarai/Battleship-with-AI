@@ -414,6 +414,10 @@ def attack(i, type): #playerId = "p1" or "p2"
 myLabel1 = Label(frame1, text="Battleship!\nPress start to begin playing.",font=("Arial", 25)).place(relx=.5, rely=.2,anchor= CENTER)
 frame1_button = Button(frame1, text="Start",font=("Arial",70, BOLD), command=partial(show_frame,frame2), bg="white", padx=20,pady=20, image=img_start, compound=CENTER).place(relx=.50, rely=.5,anchor= CENTER)
 
+#Make new frame here prompt user to chose PVE or PVP
+
+#Then Make new Frame here prompt user to chose Modifier Mode(Scanner and Big shot)
+
 #Frame 2 code
 myLabel2 = Label(frame2, text="Choose the number of ships each player will have.",font=("Arial",30, BOLD)).place(relx=.51, rely=.2,anchor= CENTER)
 
