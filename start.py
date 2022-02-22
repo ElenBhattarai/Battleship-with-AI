@@ -60,7 +60,8 @@ frame8 = Frame(root)
 frame9 = Frame(root)
 frame10 = Frame(root)
 frame11 = Frame(root)
-for frame in (frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10, frame11):
+frame12 = Frame(root)
+for frame in (frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10, frame11, frame12):
     frame.grid(row=0, column=0, sticky = 'nsew') #frame 1 - 10 rows and columns initiliazed to 0 and widgest are sticky.
 
 show_frame(frame1)
@@ -417,10 +418,13 @@ frame1_button = Button(frame1, text="Start",font=("Arial",70, BOLD), command=par
 
 #Make new frame here prompt user to chose PVE or PVP
 myLabel11 = Label(frame11, text="Chose a Mode",font=("Arial",30,BOLD)).place(relx=.5, rely=.2, anchor= CENTER)
-frame11_option1 = Button(frame11,font=("Arial",30,BOLD), text="Player\nVS\nPlayer", command=partial(show_frame,frame2),bg="white", padx=20,pady=20).place(relx=.25,rely=.4, anchor= CENTER)
-frame11_option2 = Button(frame11,font=("Arial",30,BOLD), text="Player\nVS\nComputer", command=partial(show_frame,frame2), bg="white", padx=20,pady=20).place(relx=.75,rely=.4, anchor= CENTER)
-#Then Make new Frame here prompt user to chose Modifier Mode(Scanner and Big shot)
+frame11_option1 = Button(frame11,font=("Arial",30,BOLD), text="Player\nVS\nPlayer", command=partial(show_frame,frame12),bg="white", padx=20,pady=20).place(relx=.25,rely=.4, anchor= CENTER)
+frame11_option2 = Button(frame11,font=("Arial",30,BOLD), text="Player\nVS\nComputer", command=partial(show_frame,frame12), bg="white", padx=20,pady=20).place(relx=.75,rely=.4, anchor= CENTER)
 
+#Then Make new Frame here prompt user to chose Modifier Mode(Scanner and Big shot)
+myLabel12 = Label(frame12, text="Select Modifier", font=("Arial",30,BOLD)).place(relx=.5,rely=.2,anchor=CENTER)
+frame12_option1 = Button(frame12,font=("Arial",30,BOLD), text="Big Shot\n&\nScan Shot", command=partial(show_frame,frame2), bg="white", padx=20,pady=20).place(relx=.25,rely=.4, anchor= CENTER)
+frame12_option2 = Button(frame12,font=("Arial",30,BOLD), text="No Modifiers", command=partial(show_frame,frame2), bg="white", padx=20,pady=20).place(relx=.75,rely=.4, anchor= CENTER)
 #Frame 2 code
 myLabel2 = Label(frame2, text="Choose the number of ships each player will have.",font=("Arial",30, BOLD)).place(relx=.51, rely=.2,anchor= CENTER)
 
