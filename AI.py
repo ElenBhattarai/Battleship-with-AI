@@ -18,10 +18,9 @@ player_2 = Player("Player 2") #initialize player_2
 
 def show_done_button(type): #toggles button on player 1 or player 2's screen based on "type" (button not active until player has fired)
     global frame7_button
-    global frame9_button
+    global frame15_button
     if type == "p1":
-        frame9_button.configure(state=DISABLED)
-        frame7_button.configure(state=NORMAL)
+        frame15_button.configure(state=NORMAL)
     elif type == "p2":
         frame7_button.configure(state=DISABLED)
         frame9_button.configure(state=NORMAL)
@@ -73,7 +72,7 @@ def p2_place_ships(i):
 
 #Attack_Method
 def attack(i, type): #playerId = "p1" or "p2"
-
+    attackButton()
     print("Attack" + str(i))
     global player_1
     global player_2
@@ -92,7 +91,6 @@ def attack(i, type): #playerId = "p1" or "p2"
             if(btn_text == ""): #miss!
                 player_1.enemy_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss 
                 player_2.my_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
-                show_done_button("p1")
             else: #hit! there is a ship at i
                 print(btn_text)
                 player_2.ships[btn_text].lives = int(player_2.ships[btn_text].lives) - 1 #update lives for hit ship
@@ -104,13 +102,12 @@ def attack(i, type): #playerId = "p1" or "p2"
                         player_2.my_board[i].configure(bg="black", image=img_sunk, compound=CENTER, fg = "white", state ='disabled')   
                      #notify the player with a label
                     s = player_2.name + " Ship " + btn_text + ": SUNK!!"
-                    # pop_up_label = Label(frame7, text=s,font=("Arial", 25))
-                    # pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
-                    # pop_up_label.after(2000, pop_up_label.destroy)
+                    pop_up_label = Label(frame15, text=s,font=("Arial", 25))
+                    pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
+                    pop_up_label.after(2000, pop_up_label.destroy)
                 else:
                     player_1.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
                     player_2.my_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
-                show_done_button("p1")
             p1_fired = True
         #show_frame(frame7)
     elif(type == "p2"):
@@ -131,7 +128,7 @@ def attack(i, type): #playerId = "p1" or "p2"
                         player_1.my_board[i].configure(bg="black", image=img_sunk, compound=CENTER, state ='disabled')
                     #notify the player with a label
                     s = player_1.name + " Ship " + btn_text + ": SUNK!!"
-                    pop_up_label = Label(frame9, text=s,font=("Arial", 25))
+                    pop_up_label = Label(frame15, text=s,font=("Arial", 25))
                     pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
                     pop_up_label.after(4000, pop_up_label.destroy)
                 else:
@@ -409,9 +406,11 @@ def startGame(root, visitedArray, mode):
     size = 40
 
 
+def attackButton():
+    global frame15
+    frame15_button = Button(frame15, text=player_1.name + " Done", padx=20, pady=20 command = attackAI) #player 2 done button on frame 9
+    frame15_button.grid(row=14, column=12)
 
 
-
-    
 
 
