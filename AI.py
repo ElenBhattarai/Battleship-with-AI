@@ -16,6 +16,15 @@ visitedArray = []
 p1_fired = False
 player_2 = Player("Player 2") #initialize player_2
 
+def show_done_button(type): #toggles button on player 1 or player 2's screen based on "type" (button not active until player has fired)
+    global frame7_button
+    global frame9_button
+    if type == "p1":
+        frame9_button.configure(state=DISABLED)
+        frame7_button.configure(state=NORMAL)
+    elif type == "p2":
+        frame7_button.configure(state=DISABLED)
+        frame9_button.configure(state=NORMAL)
 
 def set_images():
     image=Image.open("assets/miss.jpeg") #image for miss (bg for button will be set to white)
@@ -24,8 +33,14 @@ def set_images():
     img_miss=ImageTk.PhotoImage(img_w)
 
     image=Image.open("assets/hit.jpeg") #image for hit (bg for button will be set to red)
+    global img_hit
     img_r=image.resize((40,40))
     img_hit=ImageTk.PhotoImage(img_r)
+
+    image=Image.open("assets/sunk.jpeg") #image for sunk (bg for button will be set to black)
+    global img_sunk
+    img_s=image.resize((40,40))
+    img_sunk=ImageTk.PhotoImage(img_s)
 
 
 def p1_place_ships(i,root):
@@ -33,8 +48,14 @@ def p1_place_ships(i,root):
     global player_1
 
     place_board.place_ship(i, player_1.my_board, num_ships)
-
+    print("Heyyyyy" + player_1.my_board[i].cget("text"))
     if (place_board.p1_is_finalized()):
+        place_board.selected_ships = 0
+        p2_place_ships(1)
+        p2_place_ships(2)
+        p2_place_ships(3)
+        
+        
         frame4_button = Button(frame13, text="Finalize Ship\nPlacement", padx=20, pady=20, command = lambda: frame14_setup(root)).grid(row = 11, column = 22)#when Finalize Ship Placement is pressed then setup_frame5 function is called
 
 
@@ -43,9 +64,10 @@ def p2_place_ships(i):
     global player_2
     # print(player_2.my_board)
     place_board.place_ship(i, player_2.my_board, num_ships)
-
-    if (place_board.p2_is_finalized()):
-        frame5_button = Button(frame5, text="Finalize Ship\nPlacement", padx=20, pady=20, command=partial(show_frame,frame6)).grid(row = 11, column = 22)#when Finalized Ship Placement is pressed then frame6 displays on the screen
+    print("Heyyyyy" + player_2.my_board[i].cget("text"))
+    # if (place_board.p2_is_finalized()):
+        
+    #     frame5_button = Button(frame5, text="Finalize Ship\nPlacement", padx=20, pady=20, command=partial(show_frame,frame6)).grid(row = 11, column = 22)#when Finalized Ship Placement is pressed then frame6 displays on the screen
 
 
 
@@ -62,6 +84,7 @@ def attack(i, type): #playerId = "p1" or "p2"
     global img_missq
     global img_hit
     if(type == "p1"): #miss
+        print("here" + str(i))
         p2_fired = False
         if not p1_fired:
             btn_text = player_2.my_board[i].cget("text")
@@ -69,7 +92,7 @@ def attack(i, type): #playerId = "p1" or "p2"
             if(btn_text == ""): #miss!
                 player_1.enemy_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss 
                 player_2.my_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
-                #show_done_button("p1")
+                show_done_button("p1")
             else: #hit! there is a ship at i
                 print(btn_text)
                 player_2.ships[btn_text].lives = int(player_2.ships[btn_text].lives) - 1 #update lives for hit ship
@@ -81,9 +104,9 @@ def attack(i, type): #playerId = "p1" or "p2"
                         player_2.my_board[i].configure(bg="black", image=img_sunk, compound=CENTER, fg = "white", state ='disabled')   
                      #notify the player with a label
                     s = player_2.name + " Ship " + btn_text + ": SUNK!!"
-                    pop_up_label = Label(frame7, text=s,font=("Arial", 25))
-                    pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
-                    pop_up_label.after(2000, pop_up_label.destroy)
+                    # pop_up_label = Label(frame7, text=s,font=("Arial", 25))
+                    # pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
+                    # pop_up_label.after(2000, pop_up_label.destroy)
                 else:
                     player_1.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
                     player_2.my_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
@@ -120,11 +143,9 @@ def attack(i, type): #playerId = "p1" or "p2"
 
 
 def draw_boards(type, size, offset_r, offset_c):
-    print("test DRAWBOARDS")
     global player_1
     global player_2
     if type == "p1":
-        print("HERE P1")
     
         #draw player board, creates a 10 x 10 canvas for the buttons to be placed in
         for i in range(10):
@@ -203,11 +224,6 @@ def assign_positions(type):
                 player_1.ships[btn_text].positions.append(i) #add this index to the position of the corresponding ship
                 print("Found one")
     elif type == "p2":
-        p2_place_ships(39)
-        p2_place_ships(40)
-        p2_place_ships(41)
-
-
         for i in range(len(player_2.my_board)): #iterate through the player's board
             btn_text = player_2.my_board[i].cget("text")
             if btn_text != "": #will either be "A", "B", "C", "D", or "E"
@@ -219,9 +235,7 @@ def board(type, size, root): #size = width and length of the canvas
     global player_2
     global P1_ENEMY_CREATED
     global P2_ENEMY_CREATED
-    print(P1_ENEMY_CREATED)
-    print(P2_ENEMY_CREATED)
-    print(size)
+   
     if type == 'p1_set': #it is player 1's turn and they are placing their ships
         pos = product(range(10), range(10))
         
@@ -234,7 +248,10 @@ def board(type, size, root): #size = width and length of the canvas
             button = Button(frame13, command=partial(p1_place_ships, i, root))
             button.grid(row=item[0], column=item[1], sticky="n,e,s,w")
             player_1.my_board.append(button)
+
+        
     if type == 'p1_attack': #it is player 1's turn and they are attacking 
+       
         global frame15
         frame15 = Frame(root)
         frame15.grid(row=0, column=0, sticky = 'nsew')
@@ -271,6 +288,8 @@ def board(type, size, root): #size = width and length of the canvas
             button = Button(frame17, command=partial(p2_place_ships, i=i))
             button.grid(row=item[0], column=item[1], sticky="n,e,s,w")
             player_2.my_board.append(button)
+            
+
 
        
 
@@ -299,6 +318,7 @@ def board(type, size, root): #size = width and length of the canvas
 
 
 
+
 def choose_ship_number_AI(root):
     global frame13
     global num_ships
@@ -323,6 +343,7 @@ def choose_ship_number_AI(root):
                     ship4 = Button(frame13, text="DDDD", padx=80, pady=10, fg='green').grid(row = 6, column = 22) #sets a ship button for ship 4 on frame 4
                     if x >= 5:
                         ship5 = Button(frame13, text="EEEEE", padx=100, pady=10, fg='purple').grid(row = 7, column = 22) #sets a ship button for ship 5 on frame 4
+
 
 def ship_count_AI(x, root):
     global frame13
@@ -357,8 +378,7 @@ def frame12_setup(root):
     myButton3 = Button(frame12, text="3 ships",font=("Arial",20, BOLD), padx=25, pady=25, command=lambda: sframe13(3,root)).place(relx=.5,rely=.5,anchor= CENTER) #button to select 3 ships, calls setup_frame3
     myButton4 = Button(frame12, text="4 ships",font=("Arial",20, BOLD), padx=25, pady=25, command=lambda: sframe13(4,root)).place(relx=.5,rely=.6,anchor= CENTER) #button to select 4 ships, calls setup_frame3
     myButton5 = Button(frame12, text="5 ships",font=("Arial",20, BOLD), padx=25, pady=25, command=lambda: sframe13(5,root)).place(relx=.5,rely=.7,anchor= CENTER) #button to select 5 ships, calls setup_frame3
-    
-    print("Hey")
+
     show_frame(frame12)
 
 def frame13_setup(root):
@@ -367,6 +387,7 @@ def frame13_setup(root):
     frame13.grid(row=0, column=0, sticky = 'nsew')
 
 def frame14_setup(root):
+    
     global frame14
     frame14 = Frame(root)
     frame14.grid(row=0, column=0, sticky = 'nsew')
@@ -386,10 +407,6 @@ def hit(hit_index):
 
 def startGame(root, visitedArray, mode):
     size = 40
-
-    
-   
-
 
 
 
