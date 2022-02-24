@@ -6,6 +6,7 @@ from ship import Ship
 from place_board import PlaceBoard
 from itertools import product
 from PIL import ImageTk, Image
+import random
 
 num_ships = 0
 player_1 = Player("Player 1") #initialize player_1
@@ -16,14 +17,12 @@ visitedArray = []
 p1_fired = False
 player_2 = Player("Player 2") #initialize player_2
 
+
 def show_done_button(type): #toggles button on player 1 or player 2's screen based on "type" (button not active until player has fired)
     global frame7_button
     global frame15_button
     if type == "p1":
         frame15_button.configure(state=NORMAL)
-    elif type == "p2":
-        frame7_button.configure(state=DISABLED)
-        frame9_button.configure(state=NORMAL)
 
 def set_images():
     image=Image.open("assets/miss.jpeg") #image for miss (bg for button will be set to white)
@@ -49,13 +48,8 @@ def p1_place_ships(i,root):
     place_board.place_ship(i, player_1.my_board, num_ships)
     print("Heyyyyy" + player_1.my_board[i].cget("text"))
     if (place_board.p1_is_finalized()):
-        place_board.selected_ships = 0
-        p2_place_ships(1)
-        p2_place_ships(2)
-        p2_place_ships(3)
-        
-        
         frame4_button = Button(frame13, text="Finalize Ship\nPlacement", padx=20, pady=20, command = lambda: frame14_setup(root)).grid(row = 11, column = 22)#when Finalize Ship Placement is pressed then setup_frame5 function is called
+        
 
 
 def p2_place_ships(i):
@@ -80,7 +74,7 @@ def attack(i, type): #playerId = "p1" or "p2"
 
     global p1_fired
     global p2_fired
-    global img_missq
+    global img_miss
     global img_hit
     if(type == "p1"): #miss
         print("here" + str(i))
@@ -95,6 +89,9 @@ def attack(i, type): #playerId = "p1" or "p2"
                 print(btn_text)
                 player_2.ships[btn_text].lives = int(player_2.ships[btn_text].lives) - 1 #update lives for hit ship
 
+                player_1.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
+                player_2.my_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
+
                 if(player_2.ships[btn_text].lives == 0):
                     ship_positions = player_2.ships[btn_text].positions #puts the indices of the ship in an array
                     for i in ship_positions:
@@ -105,9 +102,7 @@ def attack(i, type): #playerId = "p1" or "p2"
                     pop_up_label = Label(frame15, text=s,font=("Arial", 25))
                     pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
                     pop_up_label.after(2000, pop_up_label.destroy)
-                else:
-                    player_1.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
-                    player_2.my_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
+                   
             p1_fired = True
         #show_frame(frame7)
     elif(type == "p2"):
@@ -115,11 +110,14 @@ def attack(i, type): #playerId = "p1" or "p2"
         if not p2_fired:
             btn_text = player_1.my_board[i].cget("text")
             if(player_1.my_board[i].cget("text") == ""): #miss
-                player_2.enemy_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss
+                #player_2.enemy_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss
                 player_1.my_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
                 show_done_button("p2")
             else: #hit! there is a ship at i
-                player_1.ships[btn_text].lives = int(player_1.ships[btn_text].lives) - 1 #update lives for hit ship
+                #player_1.ships[btn_text].lives = int(player_1.ships[btn_text].lives) - 1 #update lives for hit ship
+
+                #player_2.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, state ='disabled')   
+                player_1.my_board[i].configure(bg = "red", image=img_hit, compound=CENTER, state ='disabled')
                
                 if(player_1.ships[btn_text].lives == 0):
                     ship_positions = player_1.ships[btn_text].positions #puts the indices of the ship in an arry
@@ -131,10 +129,8 @@ def attack(i, type): #playerId = "p1" or "p2"
                     pop_up_label = Label(frame15, text=s,font=("Arial", 25))
                     pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
                     pop_up_label.after(4000, pop_up_label.destroy)
-                else:
-                    player_2.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, state ='disabled')   
-                    player_1.my_board[i].configure(bg = "red", image=img_hit, compound=CENTER, state ='disabled')
-                show_done_button("p2")
+                    
+                #show_done_button("p2")
             p2_fired = True
         #show_frame(frame9)
 
@@ -384,6 +380,20 @@ def frame13_setup(root):
     frame13.grid(row=0, column=0, sticky = 'nsew')
 
 def frame14_setup(root):
+
+    place_board.reset()
+    p2_place_ships(0)
+    p2_place_ships(1)
+    p2_place_ships(2)
+
+    p2_place_ships(3)
+    p2_place_ships(4)
+    p2_place_ships(5)
+
+    p2_place_ships(6)
+    p2_place_ships(7)
+    p2_place_ships(8)
+    p2_place_ships(9)
     
     global frame14
     frame14 = Frame(root)
@@ -408,9 +418,23 @@ def startGame(root, visitedArray, mode):
 
 def attackButton():
     global frame15
-    frame15_button = Button(frame15, text=player_1.name + " Done", padx=20, pady=20 command = attackAI) #player 2 done button on frame 9
+    frame15_button = Button(frame15, text=player_1.name + " Done", padx=20, pady=20, command = attackAI) #player 2 done button on frame 9
     frame15_button.grid(row=14, column=12)
 
 
 
+
+def attackAI():
+    easy_visited = set()
+
+    shuffleAgain = False
+    while(shuffleAgain == False):
+        indexToshoot = random.randint(0,100)
+        if indexToshoot in easy_visited:
+            shuffleAgain = False
+        else:
+            shuffleAgain = True
+    easy_visited.add(indexToshoot)
+    attack(indexToshoot, "p2")
+    show_frame(frame15)
 
