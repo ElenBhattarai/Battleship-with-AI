@@ -430,9 +430,9 @@ class PlaceBoard:
             return(True)
 
     def __change(self, i, button_ids, enter_amount):#changes the button to a letter and the button ids are updated based on if the player 1 or player 2 buttons are being clicked
-        print("in change")
+        #print("in change")
 
-        print(self.selected_ships)
+        #print(self.selected_ships)
         print(enter_amount)
         print(button_ids[i].cget('text'))
 
@@ -444,8 +444,10 @@ class PlaceBoard:
                 self.placing_ships += 1 
             elif(self.selected_ships>0 and self.selected_ships<=2):#if you have clicked the board once, the next two clicks will place ship B and placing_ships will be updated to keep track of what click the user is on in order to check for bad user input in the valid_move functions
                 self.text_variable = 'B'
+                print("OMG" + str(self.selected_ships))
                 self.placing_ships += 1
             elif(self.selected_ships>2 and self.selected_ships<=5):#if you have clicked the board three times, you are now placing ship C and placing_ships will be updated to keep track of what click the user is on in order to check for bad user input in the valid_move functions
+                print("OMG" + str(self.selected_ships))
                 self.text_variable = 'C'
                 self.placing_ships += 1
             elif(self.selected_ships>5 and self.selected_ships<=9):#if you have clicked the board five times, you are now placing ships D and placing_ships will be updated to keep track of what click the user is on in order to check for bad user input in the valid_move functions
@@ -465,7 +467,8 @@ class PlaceBoard:
                     self.player_1_turn = False
                 else:#have the button appear on player 2's screen if player 2's board was just finalized 
                     self.player_2_finalized = True
-
+        else:
+            print("Error here budd")
     def p1_is_finalized(self):
         return self.player_1_finalized
 
@@ -473,7 +476,7 @@ class PlaceBoard:
         return self.player_2_finalized
 
     def place_ship(self, i, button_ids, num_ships): #sends the index to be changed to change function after checking if the placement is valid
-        print(self.placing_ships)
+        print("Jackkkkk" , self.placing_ships)
         #the amount of times the user will click the board when placing their ships
         enter_amount = 0 
 
