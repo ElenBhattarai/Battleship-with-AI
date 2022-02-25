@@ -419,15 +419,15 @@ def attack(i, type): #playerId = "p1" or "p2"
 def modeChecker(mode):
     global game_mode
     game_mode = mode
-    show_frame(frame12)
+    if game_mode == "PVP":
+        show_frame(frame12)
+    elif game_mode == "PVE":
+        #show_frame(frame13)
+        executiveAI(root)
 
 def game_choice():
-    global game_mode
-    if game_mode == "PVP":
-        show_frame(frame2)
-    elif game_mode == "PVE":
-        executiveAI(root)    
-
+    #executive big shot modifier
+    show_frame(frame2)
 
 #Frame 1 code
 myLabel1 = Label(frame1, text="Battleship!\nPress start to begin playing.",font=("Arial", 25)).place(relx=.5, rely=.2,anchor= CENTER)
@@ -440,8 +440,9 @@ frame11_option2 = Button(frame11,font=("Arial",30,BOLD), text="Player\nVS\nCompu
 
 #Then Make new Frame here prompt user to chose Modifier Mode(Scanner and Big shot)
 myLabel12 = Label(frame12, text="Select Modifier", font=("Arial",30,BOLD)).place(relx=.5,rely=.2,anchor=CENTER)
-frame12_option1 = Button(frame12,font=("Arial",30,BOLD), text="Big Shot\n&\nScan Shot", command= game_choice, bg="white", padx=20,pady=20).place(relx=.25,rely=.4, anchor= CENTER)
-frame12_option2 = Button(frame12,font=("Arial",30,BOLD), text="No Modifiers", command=game_choice, bg="white", padx=20,pady=20).place(relx=.75,rely=.4, anchor= CENTER)
+frame12_option1 = Button(frame12,font=("Arial",30,BOLD), text="Big Shot\n&\nScan Shot", command=game_choice, bg="white", padx=20,pady=20).place(relx=.25,rely=.4, anchor= CENTER)
+frame12_option2 = Button(frame12,font=("Arial",30,BOLD), text="No Modifiers",command=partial(show_frame,frame2), bg="white", padx=20,pady=20).place(relx=.75,rely=.4, anchor= CENTER)
+
 #Frame 2 code
 myLabel2 = Label(frame2, text="Choose the number of ships each player will have.",font=("Arial",30, BOLD)).place(relx=.51, rely=.2,anchor= CENTER)
 

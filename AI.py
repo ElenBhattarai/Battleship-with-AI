@@ -366,11 +366,12 @@ def frame12_setup(root):
     frame12 = Frame(root)
     frame12.grid(row=0, column=0, sticky = 'nsew')
 
-    myButton1 = Button(frame12, text="1 ship  ",font=("Arial",20, BOLD), padx=25, pady=25, command=lambda: sframe13(1,root)).place(relx=.5,rely=.3,anchor= CENTER) #button to select 1 ship, calls setup_frame3
-    myButton2 = Button(frame12, text="2 ships",font=("Arial",20, BOLD), padx=25, pady=25, command=lambda: sframe13(2,root)).place(relx=.5,rely=.4,anchor= CENTER) #button to select 2 ships, calls setup_frame3
-    myButton3 = Button(frame12, text="3 ships",font=("Arial",20, BOLD), padx=25, pady=25, command=lambda: sframe13(3,root)).place(relx=.5,rely=.5,anchor= CENTER) #button to select 3 ships, calls setup_frame3
-    myButton4 = Button(frame12, text="4 ships",font=("Arial",20, BOLD), padx=25, pady=25, command=lambda: sframe13(4,root)).place(relx=.5,rely=.6,anchor= CENTER) #button to select 4 ships, calls setup_frame3
-    myButton5 = Button(frame12, text="5 ships",font=("Arial",20, BOLD), padx=25, pady=25, command=lambda: sframe13(5,root)).place(relx=.5,rely=.7,anchor= CENTER) #button to select 5 ships, calls setup_frame3
+    myLabel12 = Label(frame12, text="Choose the number of ships each player will have.",font=("Arial",30, BOLD),padx=15, pady=15,bg="white",).place(relx=.5, rely=.1,anchor= CENTER)
+    myButton1 = Button(frame12, text="1 ship  ",font=("Arial",20, BOLD), padx=10, pady=10, bg="white",command=lambda: sframe13(1,root)).place(relx=.5,rely=.3,anchor= CENTER) #button to select 1 ship, calls setup_frame3
+    myButton2 = Button(frame12, text="2 ships",font=("Arial",20, BOLD), padx=10, pady=10, bg="white",command=lambda: sframe13(2,root)).place(relx=.5,rely=.4,anchor= CENTER) #button to select 2 ships, calls setup_frame3
+    myButton3 = Button(frame12, text="3 ships",font=("Arial",20, BOLD), padx=10, pady=10,bg="white", command=lambda: sframe13(3,root)).place(relx=.5,rely=.5,anchor= CENTER) #button to select 3 ships, calls setup_frame3
+    myButton4 = Button(frame12, text="4 ships",font=("Arial",20, BOLD), padx=10, pady=10,bg="white", command=lambda: sframe13(4,root)).place(relx=.5,rely=.6,anchor= CENTER) #button to select 4 ships, calls setup_frame3
+    myButton5 = Button(frame12, text="5 ships",font=("Arial",20, BOLD), padx=10, pady=10, bg="white", command=lambda: sframe13(5,root)).place(relx=.5,rely=.7,anchor= CENTER) #button to select 5 ships, calls setup_frame3
 
     show_frame(frame12)
 
@@ -399,10 +400,10 @@ def frame14_setup(root):
     frame14 = Frame(root)
     frame14.grid(row=0, column=0, sticky = 'nsew')
 
-    choose_diff = Label(frame14, text = "Choose the level of difficulty to play with AI").pack()
-    easy = Button(frame14, text = "Easy", command=partial(board, "p1_attack", 40,root)).pack()
-    medium = Button(frame14, text = "Medium",command=partial(board, "p1_attack", 40,root)).pack()
-    hard = Button(frame14, text = "Hard",command=partial(board, "p1_attack", 40,root)).pack()
+    choose_diff = Label(frame14, text = "Choose the level of difficulty to play with AI",font=("Arial",30,BOLD),bg="white",padx=20,pady=20).place(relx=.5,rely=.2,anchor=CENTER)
+    easy = Button(frame14, text = "Easy", command=partial(board, "p1_attack", 40,root),font=("Arial",30,BOLD),bg="white",padx=20,pady=20).place(relx=.25,rely=.5,anchor=CENTER)
+    medium = Button(frame14, text = "Medium",command=partial(board, "p1_attack", 40,root),font=("Arial",30,BOLD),bg="white",padx=20,pady=20).place(relx=.5,rely=.5,anchor=CENTER)
+    hard = Button(frame14, text = "Hard",command=partial(board, "p1_attack", 40,root),font=("Arial",30,BOLD),bg="white",padx=20,pady=20).place(relx=.75,rely=.5,anchor=CENTER)
     show_frame(frame14)
 
 def executiveAI(root):
