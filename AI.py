@@ -16,6 +16,7 @@ place_board = PlaceBoard() #initialize the board placement
 visitedArray = []
 p1_fired = False
 player_2 = Player("Player 2") #initialize player_2
+game_mode = ""
 
 
 def show_done_button(type): #toggles button on player 1 or player 2's screen based on "type" (button not active until player has fired)
@@ -114,7 +115,7 @@ def attack(i, type): #playerId = "p1" or "p2"
                 player_1.my_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
                 show_done_button("p2")
             else: #hit! there is a ship at i
-                #player_1.ships[btn_text].lives = int(player_1.ships[btn_text].lives) - 1 #update lives for hit ship
+                player_1.ships[btn_text].lives = int(player_1.ships[btn_text].lives) - 1 #update lives for hit ship
 
                 #player_2.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, state ='disabled')   
                 player_1.my_board[i].configure(bg = "red", image=img_hit, compound=CENTER, state ='disabled')
@@ -122,8 +123,8 @@ def attack(i, type): #playerId = "p1" or "p2"
                 if(player_1.ships[btn_text].lives == 0):
                     ship_positions = player_1.ships[btn_text].positions #puts the indices of the ship in an arry
                     for i in ship_positions:
-                        player_2.enemy_board[i].configure(bg="black", image=img_sunk, compound=CENTER, state ='disabled')
-                        player_1.my_board[i].configure(bg="black", image=img_sunk, compound=CENTER, state ='disabled')
+                        #player_2.enemy_board[i].configure(bg="black", image=img_sunk, compound=CENTER,fg = "white", state ='disabled')
+                        player_1.my_board[i].configure(bg="black", image=img_sunk, compound=CENTER,fg = "white", state ='disabled')
                     #notify the player with a label
                     s = player_1.name + " Ship " + btn_text + ": SUNK!!"
                     pop_up_label = Label(frame15, text=s,font=("Arial", 25))
@@ -223,11 +224,13 @@ def assign_positions(type):
                 print("i and button text: " + str(i) + " " + btn_text)
                 player_2.ships[btn_text].positions.append(i) #add this index to the position of the corresponding ship
 
-def board(type, size, root): #size = width and length of the canvas
+def board(type, size, root, game_mod): #size = width and length of the canvas
     global player_1 
     global player_2
     global P1_ENEMY_CREATED
     global P2_ENEMY_CREATED
+    global game_mode
+    game_mode = game_mod
    
     if type == 'p1_set': #it is player 1's turn and they are placing their ships
         pos = product(range(10), range(10))
@@ -319,11 +322,11 @@ def choose_ship_number_AI(root):
 
     #Frame 4 code   
     #label created inside set_player_names function
-    board('p1_set', 40, root)
+    board('p1_set', 40, root, "")
 
     #frame 5 code
     #label created inside set_player_names function
-    board('p2_set', 40, root)
+    board('p2_set', 40, root, "")
 
 
     if x >= 1: 
@@ -379,8 +382,10 @@ def frame13_setup(root):
     frame13 = Frame(root)
     frame13.grid(row=0, column=0, sticky = 'nsew')
 
-def frame14_setup(root):
 
+  
+
+def frame14_setup(root):
     place_board.reset()
     p2_place_ships(0)
     p2_place_ships(1)
@@ -400,9 +405,9 @@ def frame14_setup(root):
     frame14.grid(row=0, column=0, sticky = 'nsew')
 
     choose_diff = Label(frame14, text = "Choose the level of difficulty to play with AI").pack()
-    easy = Button(frame14, text = "Easy", command=partial(board, "p1_attack", 40,root)).pack()
-    medium = Button(frame14, text = "Medium",command=partial(board, "p1_attack", 40,root)).pack()
-    hard = Button(frame14, text = "Hard",command=partial(board, "p1_attack", 40,root)).pack()
+    easy = Button(frame14, text = "Easy", command=partial(board, "p1_attack", 40,root,"easy")).pack()
+    medium = Button(frame14, text = "Medium",command=partial(board, "p1_attack", 40,root,"medium")).pack()
+    hard = Button(frame14, text = "Hard",command=partial(board, "p1_attack", 40,root,"hard")).pack()
     show_frame(frame14)
 
 def executiveAI(root):
@@ -418,23 +423,50 @@ def startGame(root, visitedArray, mode):
 
 def attackButton():
     global frame15
-    frame15_button = Button(frame15, text=player_1.name + " Done", padx=20, pady=20, command = attackAI) #player 2 done button on frame 9
+    global game_mode
+    frame15_button = Button(frame15, text=player_1.name + " Done", padx=20, pady=20, command = lambda: attackAI(game_mode)) #player 2 done button on frame 9
     frame15_button.grid(row=14, column=12)
 
 
 
+easy_visited = set()
+medium_visited = set()
+hard_visited = set()
 
-def attackAI():
-    easy_visited = set()
+def attackAI(game):
+    if(game == "easy"):
+        easyAI()
+    elif(game == "medium"):
+        mediumAI()
+    else:
+        hardAI()
 
+
+def easyAI():
     shuffleAgain = False
     while(shuffleAgain == False):
-        indexToshoot = random.randint(0,100)
+        indexToshoot = random.randint(0,99)
         if indexToshoot in easy_visited:
             shuffleAgain = False
         else:
             shuffleAgain = True
-    easy_visited.add(indexToshoot)
+            easy_visited.add(indexToshoot)
+    
     attack(indexToshoot, "p2")
-    show_frame(frame15)
 
+
+
+
+
+def hardAI():
+    shuffleAgain = False
+    while(shuffleAgain == False):
+        indexToshoot = random.randint(0,99)
+        btn_text = player_1.my_board[indexToshoot].cget("text")
+        if indexToshoot in medium_visited or btn_text == "":
+            shuffleAgain = False
+        else:
+            shuffleAgain = True
+            medium_visited.add(indexToshoot)
+        
+    attack(indexToshoot, "p2")
