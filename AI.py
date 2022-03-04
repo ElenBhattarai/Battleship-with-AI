@@ -274,6 +274,7 @@ def board(type, size, root, game_mod): #size = width and length of the canvas
         frame15.grid(row=0, column=0, sticky = 'nsew')
         if not P1_ENEMY_CREATED:
             assign_positions("p2") # assign positions indices for player 2's own ships, so that p1 may attack them
+            assign_positions("p1")
             pos = product(range(10), range(10))
             #create
             for i in range(10):
@@ -416,6 +417,11 @@ def frame14_setup(root):
     p2_place_ships(6)
     p2_place_ships(7)
     p2_place_ships(8)
+
+    p2_place_ships(11)
+    p2_place_ships(12)
+    p2_place_ships(13)
+    p2_place_ships(14)
     
     global frame14
     frame14 = Frame(root)
@@ -503,7 +509,6 @@ def easyAI(root):
     attack(indexToshoot, "p2",root)
     easy_visited.add(indexToshoot)
 
-
 def hardAI(root):
     shuffleAgain = False
     while(shuffleAgain == False):
@@ -516,3 +521,22 @@ def hardAI(root):
     if(p2_fired == False):
         attack(indexToshoot, "p2",root)
         medium_visited.add(indexToshoot)
+
+
+
+
+
+def mediumAI(root):
+        return()
+
+            
+
+
+
+
+
+
+
+
+
+    
