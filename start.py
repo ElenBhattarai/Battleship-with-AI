@@ -16,6 +16,9 @@ num_ships = 0
 player_1 = Player("Player 1") #initialize player_1
 player_2 = Player("Player 2") #initialize player_2
 place_board = PlaceBoard() #initialize the board placement
+count1 = 0
+count2 = 0
+bigShot1 = False
 
 P1_ENEMY_CREATED = False
 P2_ENEMY_CREATED = False
@@ -354,7 +357,8 @@ def attack(i, type): #playerId = "p1" or "p2"
     global player_1
     global player_2
 
-
+    global bigShot2
+    global bigShot1
     global p1_fired
     global p2_fired
     global img_miss
@@ -362,57 +366,117 @@ def attack(i, type): #playerId = "p1" or "p2"
     if(type == "p1"): #miss
         p2_fired = False
         if not p1_fired:
-            btn_text = player_2.my_board[i].cget("text")
-            if(btn_text == ""): #miss!
-                player_1.enemy_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss 
-                player_2.my_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
-                show_done_button("p1")
-            else: #hit! there is a ship at i
-                print(btn_text)
-                player_2.ships[btn_text].lives = int(player_2.ships[btn_text].lives) - 1 #update lives for hit ship
+            if(bigShot1 == True):
+                x = [(i-11),(i-10),(i-9),(i-1),(i),(i+1),(i+9),(i+10),(i+11)]
+                for y in x:
+                    btn_text = player_2.my_board[y].cget("text")
+                    if(btn_text == ""): #miss!
+                        player_1.enemy_board[y].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss 
+                        player_2.my_board[y].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
+                        show_done_button("p1")
+                    else: #hit! there is a ship at i
+                        print(btn_text)
+                        player_2.ships[btn_text].lives = int(player_2.ships[btn_text].lives) - 1 #update lives for hit ship
 
-                if(player_2.ships[btn_text].lives == 0):
-                    ship_positions = player_2.ships[btn_text].positions #puts the indices of the ship in an array
-                    for i in ship_positions:
-                        player_1.enemy_board[i].configure(bg="black", image=img_sunk, compound=CENTER, fg = "white", state ='disabled')
-                        player_2.my_board[i].configure(bg="black", image=img_sunk, compound=CENTER, fg = "white", state ='disabled')   
-                     #notify the player with a label
-                    s = player_2.name + " Ship " + btn_text + ": SUNK!!"
-                    pop_up_label = Label(frame7, text=s,font=("Arial", 25))
-                    pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
-                    pop_up_label.after(2000, pop_up_label.destroy)
-                else:
-                    player_1.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
-                    player_2.my_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
+                        if(player_2.ships[btn_text].lives == 0):
+                            ship_positions = player_2.ships[btn_text].positions #puts the indices of the ship in an array
+                            for y in ship_positions:
+                                player_1.enemy_board[y].configure(bg="black", image=img_sunk, compound=CENTER, fg = "white", state ='disabled')
+                                player_2.my_board[y].configure(bg="black", image=img_sunk, compound=CENTER, fg = "white", state ='disabled')   
+                            #notify the player with a label
+                            s = player_2.name + " Ship " + btn_text + ": SUNK!!"
+                            pop_up_label = Label(frame7, text=s,font=("Arial", 25))
+                            pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
+                            pop_up_label.after(2000, pop_up_label.destroy)
+                        else:
+                            player_1.enemy_board[y].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
+                            player_2.my_board[y].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
+                #(i-11)(i-10)(i-9)
+                #(i-1)(i)(i+1)
+                #(i+9)(i+10)(i+11)
                 show_done_button("p1")
-            p1_fired = True
+                bigShot1 = False
+                p1_fired = True
+            else:
+                btn_text = player_2.my_board[i].cget("text")
+                if(btn_text == ""): #miss!
+                    player_1.enemy_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss 
+                    player_2.my_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
+                    show_done_button("p1")
+                else: #hit! there is a ship at i
+                    print(btn_text)
+                    player_2.ships[btn_text].lives = int(player_2.ships[btn_text].lives) - 1 #update lives for hit ship
+
+                    if(player_2.ships[btn_text].lives == 0):
+                        ship_positions = player_2.ships[btn_text].positions #puts the indices of the ship in an array
+                        for i in ship_positions:
+                            player_1.enemy_board[i].configure(bg="black", image=img_sunk, compound=CENTER, fg = "white", state ='disabled')
+                            player_2.my_board[i].configure(bg="black", image=img_sunk, compound=CENTER, fg = "white", state ='disabled')   
+                        #notify the player with a label
+                        s = player_2.name + " Ship " + btn_text + ": SUNK!!"
+                        pop_up_label = Label(frame7, text=s,font=("Arial", 25))
+                        pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
+                        pop_up_label.after(2000, pop_up_label.destroy)
+                    else:
+                        player_1.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
+                        player_2.my_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
+                    show_done_button("p1")
+                p1_fired = True
         #show_frame(frame7)
     elif(type == "p2"):
         p1_fired = False
         if not p2_fired:
-            btn_text = player_1.my_board[i].cget("text")
-            if(player_1.my_board[i].cget("text") == ""): #miss
-                player_2.enemy_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss
-                player_1.my_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
+            if(bigShot2 == True):
+                x = [(i-11),(i-10),(i-9),(i-1),(i),(i+1),(i+9),(i+10),(i+11)]
+                for y in x:
+                    btn_text = player_1.my_board[y].cget("text")
+                    if(player_1.my_board[y].cget("text") == ""): #miss
+                        player_2.enemy_board[y].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss
+                        player_1.my_board[y].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
+                        show_done_button("p2")
+                    else: #hit! there is a ship at i
+                        player_1.ships[btn_text].lives = int(player_1.ships[btn_text].lives) - 1 #update lives for hit ship
+                    
+                        if(player_1.ships[btn_text].lives == 0):
+                            ship_positions = player_1.ships[btn_text].positions #puts the indices of the ship in an arry
+                            for y in ship_positions:
+                                player_2.enemy_board[y].configure(bg="black", image=img_sunk, compound=CENTER, state ='disabled')
+                                player_1.my_board[y].configure(bg="black", image=img_sunk, compound=CENTER, state ='disabled')
+                            #notify the player with a label
+                            s = player_1.name + " Ship " + btn_text + ": SUNK!!"
+                            pop_up_label = Label(frame9, text=s,font=("Arial", 25))
+                            pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
+                            pop_up_label.after(4000, pop_up_label.destroy)
+                        else:
+                            player_2.enemy_board[y].configure(bg="red", image=img_hit, compound=CENTER, state ='disabled')   
+                            player_1.my_board[y].configure(bg = "red", image=img_hit, compound=CENTER, state ='disabled')
                 show_done_button("p2")
-            else: #hit! there is a ship at i
-                player_1.ships[btn_text].lives = int(player_1.ships[btn_text].lives) - 1 #update lives for hit ship
-               
-                if(player_1.ships[btn_text].lives == 0):
-                    ship_positions = player_1.ships[btn_text].positions #puts the indices of the ship in an arry
-                    for i in ship_positions:
-                        player_2.enemy_board[i].configure(bg="black", image=img_sunk, compound=CENTER, state ='disabled')
-                        player_1.my_board[i].configure(bg="black", image=img_sunk, compound=CENTER, state ='disabled')
-                    #notify the player with a label
-                    s = player_1.name + " Ship " + btn_text + ": SUNK!!"
-                    pop_up_label = Label(frame9, text=s,font=("Arial", 25))
-                    pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
-                    pop_up_label.after(4000, pop_up_label.destroy)
-                else:
-                    player_2.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, state ='disabled')   
-                    player_1.my_board[i].configure(bg = "red", image=img_hit, compound=CENTER, state ='disabled')
-                show_done_button("p2")
-            p2_fired = True
+                bigShot2 = False
+                p2_fired = True
+            else:
+                btn_text = player_1.my_board[i].cget("text")
+                if(player_1.my_board[i].cget("text") == ""): #miss
+                    player_2.enemy_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss
+                    player_1.my_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
+                    show_done_button("p2")
+                else: #hit! there is a ship at i
+                    player_1.ships[btn_text].lives = int(player_1.ships[btn_text].lives) - 1 #update lives for hit ship
+                
+                    if(player_1.ships[btn_text].lives == 0):
+                        ship_positions = player_1.ships[btn_text].positions #puts the indices of the ship in an arry
+                        for i in ship_positions:
+                            player_2.enemy_board[i].configure(bg="black", image=img_sunk, compound=CENTER, state ='disabled')
+                            player_1.my_board[i].configure(bg="black", image=img_sunk, compound=CENTER, state ='disabled')
+                        #notify the player with a label
+                        s = player_1.name + " Ship " + btn_text + ": SUNK!!"
+                        pop_up_label = Label(frame9, text=s,font=("Arial", 25))
+                        pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
+                        pop_up_label.after(4000, pop_up_label.destroy)
+                    else:
+                        player_2.enemy_board[i].configure(bg="red", image=img_hit, compound=CENTER, state ='disabled')   
+                        player_1.my_board[i].configure(bg = "red", image=img_hit, compound=CENTER, state ='disabled')
+                    show_done_button("p2")
+                p2_fired = True
         #show_frame(frame9)
 
 
@@ -425,7 +489,40 @@ def modeChecker(mode):
         #show_frame(frame13)
         executiveAI(root)
 
-def game_choice():
+def bigShotModeChecker(player):
+    global count1
+    global count2
+    global player1_modifier
+    global player2_modifier
+    global bigShot1
+    global bigShot2
+    if(player == "p1"):
+        if(count1 < 2):
+            count1+=1
+            bigShot1 = True
+        else:
+            player1_modifier.configure(state=DISABLED)
+    if(player == "p2"):
+        if(count2 < 2):
+            count2+=1
+            bigShot2 = True
+        else:
+            player2_modifier.configure(state=DISABLED)
+        
+
+def bigShotMode():
+    global player1_modifier
+    global player2_modifier
+    player1_modifier = Button(frame7, text="Big Shot", fg='black', bg='white', padx=20,pady=20, state=NORMAL, command=partial(bigShotModeChecker,"p1"))
+    player1_modifier.grid(row=5, column=12)
+    player2_modifier = Button(frame9, text="Big Shot", fg='black', bg='white', padx=20,pady=20, state=NORMAL, command=partial(bigShotModeChecker,"p2"))
+    player2_modifier.grid(row=5, column=12)
+
+def game_choice(Modify):
+    global modifier
+    modifier = Modify
+    if(modifier == "Modifier"):
+        bigShotMode()
     #executive big shot modifier
     show_frame(frame2)
 
@@ -440,7 +537,7 @@ frame11_option2 = Button(frame11,font=("Arial",30,BOLD), text="Player\nVS\nCompu
 
 #Then Make new Frame here prompt user to chose Modifier Mode(Scanner and Big shot)
 myLabel12 = Label(frame12, text="Select Modifier", font=("Arial",30,BOLD)).place(relx=.5,rely=.2,anchor=CENTER)
-frame12_option1 = Button(frame12,font=("Arial",30,BOLD), text="Big Shot\n&\nScan Shot", command=game_choice, bg="white", padx=20,pady=20).place(relx=.25,rely=.4, anchor= CENTER)
+frame12_option1 = Button(frame12,font=("Arial",30,BOLD), text="Big Shot\n&\nScan Shot", command=lambda: game_choice("Modifier"), bg="white", padx=20,pady=20).place(relx=.25,rely=.4, anchor= CENTER)
 frame12_option2 = Button(frame12,font=("Arial",30,BOLD), text="No Modifiers",command=partial(show_frame,frame2), bg="white", padx=20,pady=20).place(relx=.75,rely=.4, anchor= CENTER)
 
 #Frame 2 code
