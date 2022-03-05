@@ -7,6 +7,7 @@ from place_board import PlaceBoard
 from itertools import product
 from PIL import ImageTk, Image
 import random
+import pygame
 
 num_ships = 0
 player_1 = Player("Player 1") #initialize player_1
@@ -66,6 +67,24 @@ def p2_place_ships(i):
     #     frame5_button = Button(frame5, text="Finalize Ship\nPlacement", padx=20, pady=20, command=partial(show_frame,frame6)).grid(row = 11, column = 22)#when Finalized Ship Placement is pressed then frame6 displays on the screen
 
 
+#Sound_Effect_Method
+pygame.mixer.init()
+
+def play_hit():
+    pygame.mixer.music.load("explosion.mp3")
+    pygame.mixer.music.play(loops = 0)
+
+def play_miss():
+    pygame.mixer.music.load("splash.mp3")
+    pygame.mixer.music.play(loops = 0) 
+
+def play_win():
+    pygame.mixer.music.load("yay.mp3")
+    pygame.mixer.music.play(loops = 0) 
+
+def play_lose():
+    pygame.mixer.music.load("aw.mp3")
+    pygame.mixer.music.play(loops = 0) 
 
 #Attack_Method
 def attack(i, type,root): #playerId = "p1" or "p2"
@@ -85,6 +104,7 @@ def attack(i, type,root): #playerId = "p1" or "p2"
             if not p1_fired:
                 btn_text = player_2.my_board[i].cget("text")
                 print(btn_text)
+                play_miss()
                 if(btn_text == ""): #miss!
                     player_1.enemy_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss 
                     player_2.my_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
@@ -105,6 +125,7 @@ def attack(i, type,root): #playerId = "p1" or "p2"
                         pop_up_label = Label(frame15, text=s,font=("Arial", 25))
                         pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
                         pop_up_label.after(2000, pop_up_label.destroy)
+                    play_hit()
                     
                 p1_fired = True
             #show_frame(frame7)
@@ -115,6 +136,7 @@ def attack(i, type,root): #playerId = "p1" or "p2"
                 if(player_1.my_board[i].cget("text") == ""): #miss
                     #player_2.enemy_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled') #miss
                     player_1.my_board[i].configure(bg="white", image=img_miss, compound=CENTER, state ='disabled')
+                    play_miss()
                     show_done_button("p2")
                 else: #hit! there is a ship at i
                     player_1.ships[btn_text].lives = int(player_1.ships[btn_text].lives) - 1 #update lives for hit ship
@@ -132,6 +154,7 @@ def attack(i, type,root): #playerId = "p1" or "p2"
                         pop_up_label = Label(frame15, text=s,font=("Arial", 25))
                         pop_up_label.place(relx=.5, rely=.2,anchor= CENTER)
                         pop_up_label.after(4000, pop_up_label.destroy)
+                    play_hit()
                         
                     #show_done_button("p2")
                 p2_fired = True
@@ -403,19 +426,157 @@ def frame13_setup(root):
     frame13 = Frame(root)
     frame13.grid(row=0, column=0, sticky = 'nsew')
 
+def randomizeShipPlacement():
+    global num_ships
+    ship_spaces = []
+    place_board.reset()
+ 
+    if num_ships == 1:
+        i = random.randint(0,99)
+        p2_place_ships(i)   
 
-  
+    elif num_ships == 2:
+        i = random.randint(0,99)
+        p2_place_ships(i)   
+        ship_spaces.append(i)
+ 
+        j = random.randint(0,89)
+        for x in ship_spaces:
+            while j == x:
+                j = random.randint(0,89)
+        p2_place_ships(j)
+        p2_place_ships(j+10)
+        ship_spaces.append(j)
+        ship_spaces.append(j+10)
+        
+    elif num_ships == 3:
+        i = random.randint(0,99)
+        p2_place_ships(i)   
+        ship_spaces.append(i)
+
+        j = random.randint(0,89)
+        for x in ship_spaces:
+            while j == x:
+                j = random.randint(0,89)
+        p2_place_ships(j)
+        p2_place_ships(j+10)
+        ship_spaces.append(j)
+        ship_spaces.append(j+10)
+
+        k_0 = random.randint(0,9)
+        k = random.randint(1,8)
+        k = (k_0*10) + k
+        for x in ship_spaces:
+            while k == x:
+                k_0 = random.randint(0,9)
+                k = random.randint(1,8)
+                k = (k_0*10) + k
+        p2_place_ships(k)
+        p2_place_ships(k+1)
+        p2_place_ships(k-1)
+
+    elif num_ships == 4:       
+        i = random.randint(0,99)
+        p2_place_ships(i)   
+        ship_spaces.append(i)
+        
+        j_0 = random.randint(0,9)
+        j = random.randint(1,9)
+        j = (j_0*10)+j
+        for x in ship_spaces:
+            while j == x:
+                j_0 = random.randint(0,9)
+                j = random.randint(1,9)
+                j = (j_0*10)+j
+        p2_place_ships(j)
+        p2_place_ships(j+10)
+        ship_spaces.append(j)
+        ship_spaces.append(j+10)
+
+        k_0 = random.randint(0,9)
+        k = random.randint(1,8)
+        k = (k_0*10)+k
+        for x in ship_spaces:
+            while k == x:
+                k_0 = random.randint(0,9)
+                k = random.randint(1,8)
+                k = (k_0*10)+k
+        p2_place_ships(k)
+        p2_place_ships(k+1)
+        p2_place_ships(k-1)
+        ship_spaces.append(k)
+        ship_spaces.append(k+1)
+        ship_spaces.append(k-1)
+
+        l = random.randint(10,79)
+        for x in ship_spaces:
+            while l == x:
+                l = random.randint(10,79)
+        p2_place_ships(l)
+        p2_place_ships(l+10)
+        p2_place_ships(l-10)
+        p2_place_ships(l+20)
+    
+    else:
+        i = random.randint(0,99)
+        p2_place_ships(i)   
+        ship_spaces.append(i)
+
+        j_0 = random.randint(0,9)
+        j = random.randint(0,8)
+        j = (j_0*10)+j
+        for x in ship_spaces:
+            while j == x:
+                j_0 = random.randint(0,9)
+                j = random.randint(0,8)
+                j = (j_0*10)+j
+        p2_place_ships(j)
+        p2_place_ships(j+1)
+        ship_spaces.append(j)
+        ship_spaces.append(j+1)
+
+        k = random.randint(10,89)
+        for x in ship_spaces:
+            while k == x:
+                k = random.randint(10,89)
+        p2_place_ships(k)
+        p2_place_ships(k+10)
+        p2_place_ships(k-10)
+        ship_spaces.append(k)
+        ship_spaces.append(k+10)
+        ship_spaces.append(k-10)
+
+        l = random.randint(10,79)
+        for x in ship_spaces:
+            while l == x:
+                l = random.randint(10,79)
+        p2_place_ships(l)
+        p2_place_ships(l+10)
+        p2_place_ships(l-10)
+        p2_place_ships(l+20)
+        ship_spaces.append(l)
+        ship_spaces.append(l+10)
+        ship_spaces.append(l-10)
+        ship_spaces.append(l+20)
+
+        n_0 = random.randint(0,9)
+        n = random.randint(2,7)
+        n = (n_0*10) + n
+        for x in ship_spaces:
+            while n == x:
+                n_0 = random.randint(0,9)
+                n = random.randint(2,7)
+                n = (n_0*10) + n
+        p2_place_ships(n)
+        p2_place_ships(n+1)
+        p2_place_ships(n-1)
+        p2_place_ships(n+2)
+        p2_place_ships(n-2)    
+
 
 def frame14_setup(root):
-    place_board.reset()
-    p2_place_ships(0)
 
-    p2_place_ships(2)
-    p2_place_ships(3)
-
-    p2_place_ships(6)
-    p2_place_ships(7)
-    p2_place_ships(8)
+    randomizeShipPlacement()
     
     global frame14
     frame14 = Frame(root)
@@ -465,6 +626,7 @@ def check_win(): #checks for a win condition (after player 1's turn and after pl
 
     if p2_lives == 0:
         print("WINNN")
+        play_win()
         # #shows frame 10
         # label_10_p1 = Label(frame18, text=player_1.name + " Wins!!!", font=("Arial", 60)) #label for if player 1 wins
         # label_10_p1.place(relx=.5, rely=.2,anchor= CENTER)
@@ -472,6 +634,7 @@ def check_win(): #checks for a win condition (after player 1's turn and after pl
         return True
     elif p1_lives == 0:
         print("WINNNNNNN")
+        play_lose()
         # label_10_p2 = Label(frame18, text=player_2.name + " Wins!!!", font=("Arial", 60)) #label for if player 2 wins
         # label_10_p2.place(relx=.5, rely=.2,anchor= CENTER) #shows frame 10
         winner = "p2"
