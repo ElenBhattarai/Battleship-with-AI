@@ -55,7 +55,6 @@ def p1_place_ships(i,root):
         frame4_button = Button(frame13, text="Finalize Ship\nPlacement", padx=20, pady=20, command = lambda: frame14_setup(root)).grid(row = 11, column = 22)#when Finalize Ship Placement is pressed then setup_frame5 function is called
         
 
-
 def p2_place_ships(i):
     global num_ships
     global player_2
@@ -88,7 +87,7 @@ def play_lose():
 
 #Attack_Method
 def attack(i, type,root): #playerId = "p1" or "p2"
-    attackButton(root)
+    # attackButton(root)
     print("Attack" + str(i))
     global player_1
     global player_2
@@ -176,9 +175,6 @@ def attack(i, type,root): #playerId = "p1" or "p2"
         frame18.grid(row=0, column=0, sticky = 'nsew')
         # show_frame(frame18)
 
-        
-        
-        
 
 def draw_boards(type, size, offset_r, offset_c):
     global player_1
@@ -290,8 +286,7 @@ def board(type, size, root, game_mod): #size = width and length of the canvas
             player_1.my_board.append(button)
 
         
-    if type == 'p1_attack': #it is player 1's turn and they are attacking 
-       
+    if type == 'p1_attack': #it is player 1's turn and they are attacking  
         global frame15
         frame15 = Frame(root)
         frame15.grid(row=0, column=0, sticky = 'nsew')
@@ -314,6 +309,10 @@ def board(type, size, root, game_mod): #size = width and length of the canvas
         draw_boards("p1", size, offset_r=0, offset_c=14) #offset between boards
         show_frame(frame15) #shows frame 7
 
+        # global game_mode
+        frame15_button = Button(frame15, text=player_1.name + " Done", padx=20, pady=20, command = lambda: attackAI(game_mode,root)) #player 2 done button on frame 9
+        frame15_button.grid(row=14, column=12)
+
     if type == 'p2_set': #it is player 1's turn and they are placing their ships
         pos = product(range(10), range(10))
 
@@ -330,36 +329,6 @@ def board(type, size, root, game_mod): #size = width and length of the canvas
             button.grid(row=item[0], column=item[1], sticky="n,e,s,w")
             player_2.my_board.append(button)
             
-
-
-       
-
-
-    """if type == 'p2_attack': #it is player 2's turn and they are attacking 
-        if not P2_ENEMY_CREATED:
-            assign_positions("p1") # set positions indices for player 1's own ships, so that p2 may attack them
-            pos = product(range(10), range(10))
-            #create
-            for i in range(10):
-                # shape the grid, creates a 10 x 10 canvas for buttons to be placed in
-                setsize = Canvas(frame9, width=size, height=0).grid(row=11, column=i)
-                setsize = Canvas(frame9, width=0, height=size).grid(row=i, column=11)
-
-            for i, item in enumerate(pos):
-                button = Button(frame9, text="", command=partial(attack, i, "p2"))
-                button.grid(row=item[0], column=item[1], sticky="n,e,s,w")
-                player_2.enemy_board.append(button)
-            #print(player_2.enemy_board)
-            P2_ENEMY_CREATED = True  
-            frame5.forget()
-
-        #draw the frame9 screen
-        draw_boards("p2", size, offset_r=0, offset_c=14) #offset between boards
-        show_frame(frame9) #shows frame 9"""
-
-
-
-
 def choose_ship_number_AI(root):
     global frame13
     global num_ships
@@ -427,156 +396,199 @@ def frame13_setup(root):
     frame13 = Frame(root)
     frame13.grid(row=0, column=0, sticky = 'nsew')
 
-def randomizeShipPlacement():
-    global num_ships
-    ship_spaces = []
-    place_board.reset()
- 
-    if num_ships == 1:
-        i = random.randint(0,99)
-        p2_place_ships(i)   
+placedIndex = set()
 
-    elif num_ships == 2:
-        i = random.randint(0,99)
-        p2_place_ships(i)   
-        ship_spaces.append(i)
- 
-        j = random.randint(0,89)
-        for x in ship_spaces:
-            while j == x:
-                j = random.randint(0,89)
-        p2_place_ships(j)
-        p2_place_ships(j+10)
-        ship_spaces.append(j)
-        ship_spaces.append(j+10)
-        
-    elif num_ships == 3:
-        i = random.randint(0,99)
-        p2_place_ships(i)   
-        ship_spaces.append(i)
+def randomDirection():
+    i = random.randint(1,2)
+    if(i == 1):
+        return "H"
+    elif i == 2:
+        return "V"
 
-        j = random.randint(0,89)
-        for x in ship_spaces:
-            while j == x:
-                j = random.randint(0,89)
-        p2_place_ships(j)
-        p2_place_ships(j+10)
-        ship_spaces.append(j)
-        ship_spaces.append(j+10)
+def thereisShip(thship,index,dir):
+    if dir == "H":
+        for i in range(index,index+thship,1):
+            if(player_2.my_board[i].cget("text") != ""):
+                return False
+        return True
+    elif dir == "V":
+        for i in range(index,index+(10*thship),10):
+            if(player_2.my_board[i].cget("text") != ""):
+                return False
+        return True
 
-        k_0 = random.randint(0,9)
-        k = random.randint(1,8)
-        k = (k_0*10) + k
-        for x in ship_spaces:
-            while k == x:
-                k_0 = random.randint(0,9)
-                k = random.randint(1,8)
-                k = (k_0*10) + k
-        p2_place_ships(k)
-        p2_place_ships(k+1)
-        p2_place_ships(k-1)
+def placeFirst():
+    i = random.randint(0,99)
+    placedIndex.add(i)
+    p2_place_ships(i)
 
-    elif num_ships == 4:       
-        i = random.randint(0,99)
-        p2_place_ships(i)   
-        ship_spaces.append(i)
-        
-        j_0 = random.randint(0,9)
-        j = random.randint(1,9)
-        j = (j_0*10)+j
-        for x in ship_spaces:
-            while j == x:
-                j_0 = random.randint(0,9)
-                j = random.randint(1,9)
-                j = (j_0*10)+j
-        p2_place_ships(j)
-        p2_place_ships(j+10)
-        ship_spaces.append(j)
-        ship_spaces.append(j+10)
+def placeSecond():
+    dir = randomDirection()
+    if(dir == "H"):
+        shuffleAgain = False
+        while(shuffleAgain == False):
+            i = random.randint(0,99)
+            if i in placedIndex or i % 10 == 9 or thereisShip(2,i,"H") == False:
+                shuffleAgain = False
+            else:
+                shuffleAgain = True
 
-        k_0 = random.randint(0,9)
-        k = random.randint(1,8)
-        k = (k_0*10)+k
-        for x in ship_spaces:
-            while k == x:
-                k_0 = random.randint(0,9)
-                k = random.randint(1,8)
-                k = (k_0*10)+k
-        p2_place_ships(k)
-        p2_place_ships(k+1)
-        p2_place_ships(k-1)
-        ship_spaces.append(k)
-        ship_spaces.append(k+1)
-        ship_spaces.append(k-1)
+        p2_place_ships(i)
+        p2_place_ships(i+1)
+        placedIndex.add(i)
+        placedIndex.add(i+1)
+    elif(dir == "V"):
+        shuffleAgain = False
+        while(shuffleAgain == False):
+            i = random.randint(0,89)
+            if i in placedIndex or thereisShip(2,1,"V") == False:
+                shuffleAgain = False
+            else:
+                shuffleAgain = True
 
-        l = random.randint(10,79)
-        for x in ship_spaces:
-            while l == x:
-                l = random.randint(10,79)
-        p2_place_ships(l)
-        p2_place_ships(l+10)
-        p2_place_ships(l-10)
-        p2_place_ships(l+20)
-    
-    else:
-        i = random.randint(0,99)
-        p2_place_ships(i)   
-        ship_spaces.append(i)
+        p2_place_ships(i)
+        p2_place_ships(i+10)
+        placedIndex.add(i)
+        placedIndex.add(i+10)
 
-        j_0 = random.randint(0,9)
-        j = random.randint(0,8)
-        j = (j_0*10)+j
-        for x in ship_spaces:
-            while j == x:
-                j_0 = random.randint(0,9)
-                j = random.randint(0,8)
-                j = (j_0*10)+j
-        p2_place_ships(j)
-        p2_place_ships(j+1)
-        ship_spaces.append(j)
-        ship_spaces.append(j+1)
+def placeThird():
+    dir = randomDirection()
+    if(dir == "H"):
+        shuffleAgain = False
+        while(shuffleAgain == False):
+            i = random.randint(0,99)
+            if i in placedIndex or i % 10 == 9 or i % 10 == 8 or thereisShip(3,i,"H") == False:
+                shuffleAgain = False
+            else:
+                shuffleAgain = True
 
-        k = random.randint(10,89)
-        for x in ship_spaces:
-            while k == x:
-                k = random.randint(10,89)
-        p2_place_ships(k)
-        p2_place_ships(k+10)
-        p2_place_ships(k-10)
-        ship_spaces.append(k)
-        ship_spaces.append(k+10)
-        ship_spaces.append(k-10)
+        p2_place_ships(i)
+        p2_place_ships(i+1)
+        p2_place_ships(i+2)
+        placedIndex.add(i)
+        placedIndex.add(i+1)
+        placedIndex.add(i+2)
+    elif dir == "V":
+        shuffleAgain = False
+        while(shuffleAgain == False):
+            i = random.randint(0,79)
+            if i in placedIndex or thereisShip(3,i,"V") == False: 
+                shuffleAgain = False
+            else:
+                shuffleAgain = True
 
-        l = random.randint(10,79)
-        for x in ship_spaces:
-            while l == x:
-                l = random.randint(10,79)
-        p2_place_ships(l)
-        p2_place_ships(l+10)
-        p2_place_ships(l-10)
-        p2_place_ships(l+20)
-        ship_spaces.append(l)
-        ship_spaces.append(l+10)
-        ship_spaces.append(l-10)
-        ship_spaces.append(l+20)
+        p2_place_ships(i)
+        p2_place_ships(i+10)
+        p2_place_ships(i+20)
+        placedIndex.add(i)
+        placedIndex.add(i+10)
+        placedIndex.add(i+20)
 
-        n_0 = random.randint(0,9)
-        n = random.randint(2,7)
-        n = (n_0*10) + n
-        for x in ship_spaces:
-            while n == x:
-                n_0 = random.randint(0,9)
-                n = random.randint(2,7)
-                n = (n_0*10) + n
-        p2_place_ships(n)
-        p2_place_ships(n+1)
-        p2_place_ships(n-1)
-        p2_place_ships(n+2)
-        p2_place_ships(n-2)    
+def placeFourth():
+    dir = randomDirection()
+    if(dir == "H"):
+        shuffleAgain = False
+        while(shuffleAgain == False):
+            i = random.randint(0,99)
+            if i in placedIndex or i % 10 == 9 or i % 10 == 8 or i % 10 == 7 or thereisShip(4,i,"H") == False:
+                shuffleAgain = False
+            else:
+                shuffleAgain = True
+
+        p2_place_ships(i)
+        p2_place_ships(i+1)
+        p2_place_ships(i+2)
+        p2_place_ships(i+3)
+        placedIndex.add(i)
+        placedIndex.add(i+1)
+        placedIndex.add(i+2)
+        placedIndex.add(i+3)
+    elif dir == "V":
+        shuffleAgain = False
+        while(shuffleAgain == False):
+            i = random.randint(0,69)
+            if i in placedIndex or thereisShip(4,i,"V") == False: 
+                shuffleAgain = False
+            else:
+                shuffleAgain = True
+
+        p2_place_ships(i)
+        p2_place_ships(i+10)
+        p2_place_ships(i+20)
+        p2_place_ships(i+30)
+        placedIndex.add(i)
+        placedIndex.add(i+10)
+        placedIndex.add(i+20)
+        placedIndex.add(i+30)
+
+def placeFifth():
+    dir = randomDirection()
+    if(dir == "H"):
+        shuffleAgain = False
+        while(shuffleAgain == False):
+            i = random.randint(0,99)
+            if i in placedIndex or i % 10 == 9 or i % 10 == 8 or i % 10 == 7 or i % 10 == 6 or thereisShip(5,i,"H") == False:
+                shuffleAgain = False
+            else:
+                shuffleAgain = True
+
+        p2_place_ships(i)
+        p2_place_ships(i+1)
+        p2_place_ships(i+2)
+        p2_place_ships(i+3)
+        p2_place_ships(i+4)
+        placedIndex.add(i)
+        placedIndex.add(i+1)
+        placedIndex.add(i+2)
+        placedIndex.add(i+3)
+        placedIndex.add(i+4)
+    elif dir == "V":
+        shuffleAgain = False
+        while(shuffleAgain == False):
+            i = random.randint(0,59)
+            if i in placedIndex or thereisShip(5,i,"V") == False: 
+                shuffleAgain = False
+            else:
+                shuffleAgain = True
+
+        p2_place_ships(i)
+        p2_place_ships(i+10)
+        p2_place_ships(i+20)
+        p2_place_ships(i+30)
+        p2_place_ships(i+40)
+        placedIndex.add(i)
+        placedIndex.add(i+10)
+        placedIndex.add(i+20)
+        placedIndex.add(i+30)
+        placedIndex.add(i+40)
+
+def placeShips(n):
+    if(n == 1):
+        placeFirst()
+    elif(n == 2):
+        placeFirst()
+        placeSecond()
+    elif(n == 3):
+        placeFirst()
+        placeSecond()
+        placeThird()
+    elif(n == 4):
+        placeFirst()
+        placeSecond()
+        placeThird()
+        placeFourth()
+    elif(n == 5):
+        placeFirst()
+        placeSecond()
+        placeThird()
+        placeFourth()
+        placeFifth()
 
 
 def frame14_setup(root):
-
+    place_board.reset()
+    global num_ships
+    placeShips(num_ships)
     global frame14
     frame14 = Frame(root)
     frame14.grid(row=0, column=0, sticky = 'nsew')
@@ -599,11 +611,8 @@ def startGame(root, visitedArray, mode):
     size = 40
 
 
-def attackButton(root):
-    global frame15
-    global game_mode
-    frame15_button = Button(frame15, text=player_1.name + " Done", padx=20, pady=20, command = lambda: attackAI(game_mode,root)) #player 2 done button on frame 9
-    frame15_button.grid(row=14, column=12)
+# def attackButton(root):
+    
 
 
 def check_win(): #checks for a win condition (after player 1's turn and after player 2's turn)
@@ -655,6 +664,11 @@ def attackAI(game,root):
 
 
 def easyAI(root):
+    print(player_2.ships["A"].positions)
+    print(player_2.ships["B"].positions)
+    print(player_2.ships["C"].positions)
+    print(player_2.ships["D"].positions)
+    print(player_2.ships["E"].positions)
     shuffleAgain = False
     while(shuffleAgain == False):
         indexToshoot = random.randint(0,99)
@@ -678,21 +692,229 @@ def hardAI(root):
         attack(indexToshoot, "p2",root)
         medium_visited.add(indexToshoot)
 
+def Tried(index):
+    if index in hard_visited:
+        return True
+    else:
+        return False
+
+arr = []
+alreadyChecked = []
+
+def assignArr():
+    global arr
+    if(num_ships == 1):
+        arr = ["A"]
+    elif(num_ships == 2):
+        arr = ["A","B"]
+    elif(num_ships == 3):
+        arr = ["A","B","C"]
+    elif(num_ships == 4):
+        arr = ["A","B","C","D"]
+    elif(num_ships == 5):
+        arr = ["A","B","C","D","E"]
 
 
+def ifSunk():
+    print(arr)
+    for a in arr:
+        if(a not in alreadyChecked):
+            if(player_1.ships[a].lives == 0):
+                alreadyChecked.append(a)
+                return True
+    else:
+        return False
+
+
+
+hit = False
+
+def validIndexforRight(i):
+    if(i%10 == 0):
+        return False
+    else:
+        return True
+
+def validIndexforLeft(i):
+    i = i + 1
+    if(i % 10 ==0):
+        return False
+    else:
+        return True
+
+
+# def validDown(indexToshoot):
+#     if(indexToshoot < 80): 
+#         if(player_1.my_board[indexToshoot+10]['bg'] == 'red' and player_1.my_board[indexToshoot+20].cget("text")!=""):
+#             return 20
+#         if(indexToshoot <70):
+#             if player_1.my_board[indexToshoot+10]['bg'] == 'red' and player_1.my_board[indexToshoot+20]['bg'] == 'red' and player_1.my_board[indexToshoot+30].cget("text")!="":
+#                 return 30
+#             if(indexToshoot <60):
+#                 if(player_1.my_board[indexToshoot+10]['bg'] == 'red' and player_1.my_board[indexToshoot+20]['bg'] == 'red' and player_1.my_board[indexToshoot+30]['bg'] == 'red' and player_1.my_board[indexToshoot+40].cget("text")!=""):
+#                     return 40
+#                 if(indexToshoot <50):
+#                     if(player_1.my_board[indexToshoot+10]['bg'] == 'red' and player_1.my_board[indexToshoot+20]['bg'] == 'red' and player_1.my_board[indexToshoot+30]['bg'] == 'red' and player_1.my_board[indexToshoot+40]['bg'] == 'red' and player_1.my_board[indexToshoot+50].cget("text")!=""):
+#                         return 50
+#     return 10   
+
+def validDown(indexToshoot):
+    if(indexToshoot < 80): 
+        if(player_1.my_board[indexToshoot+10]['bg'] == 'red'):
+            return 20
+        if(indexToshoot <70):
+            if player_1.my_board[indexToshoot+10]['bg'] == 'red' and player_1.my_board[indexToshoot+20]['bg'] == 'red':
+                return 30
+            if(indexToshoot <60):
+                if(player_1.my_board[indexToshoot+10]['bg'] == 'red' and player_1.my_board[indexToshoot+20]['bg'] == 'red' and player_1.my_board[indexToshoot+30]['bg'] == 'red'):
+                    return 40
+                if(indexToshoot <50):
+                    if(player_1.my_board[indexToshoot+10]['bg'] == 'red' and player_1.my_board[indexToshoot+20]['bg'] == 'red' and player_1.my_board[indexToshoot+30]['bg'] == 'red' and player_1.my_board[indexToshoot+40]['bg'] == 'red'):
+                        return 50
+    return 10
+
+
+# def validUp(indexToshoot):
+#     if(indexToshoot > 20):
+#         if(player_1.my_board[indexToshoot-10]['bg'] == 'red' and player_1.my_board[indexToshoot-20].cget("text")!=""):
+#             return 20
+#         if(indexToshoot > 30):
+#             if player_1.my_board[indexToshoot-10]['bg'] == 'red' and player_1.my_board[indexToshoot-20]['bg'] == 'red' and player_1.my_board[indexToshoot-30].cget("text")!="":
+#                 return 30
+#             if(indexToshoot > 40):
+#                 if(player_1.my_board[indexToshoot-10]['bg'] == 'red' and player_1.my_board[indexToshoot-20]['bg'] == 'red' and player_1.my_board[indexToshoot-30]['bg'] == 'red' and player_1.my_board[indexToshoot-40].cget("text")!=""):
+#                     return 40
+#                 if(indexToshoot > 50):
+#                     if(player_1.my_board[indexToshoot-10]['bg'] == 'red' and player_1.my_board[indexToshoot-20]['bg'] == 'red' and player_1.my_board[indexToshoot-30]['bg'] == 'red' and player_1.my_board[indexToshoot-40]['bg'] == 'red' and player_1.my_board[indexToshoot-50].cget("text")!=""):
+#                         return 50
+#     return 10
+
+def validUp(indexToshoot):
+    if(indexToshoot > 20):
+        if(player_1.my_board[indexToshoot-10]['bg'] == 'red'):
+            return 20
+        if(indexToshoot > 30):
+            if player_1.my_board[indexToshoot-10]['bg'] == 'red' and player_1.my_board[indexToshoot-20]['bg'] == 'red':
+                return 30
+            if(indexToshoot > 40):
+                if(player_1.my_board[indexToshoot-10]['bg'] == 'red' and player_1.my_board[indexToshoot-20]['bg'] == 'red' and player_1.my_board[indexToshoot-30]['bg'] == 'red'):
+                    return 40
+                if(indexToshoot > 50):
+                    if(player_1.my_board[indexToshoot-10]['bg'] == 'red' and player_1.my_board[indexToshoot-20]['bg'] == 'red' and player_1.my_board[indexToshoot-30]['bg'] == 'red' and player_1.my_board[indexToshoot-40]['bg'] == 'red'):
+                        return 50
+    return 10
+
+
+def validRight(indexToshoot):
+    if(indexToshoot % 10 != 9 and indexToshoot % 10 != 8):
+        if(player_1.my_board[indexToshoot+1]['bg'] == 'red' and player_1.my_board[indexToshoot+2].cget("text")!=""):
+            return 2
+        if(indexToshoot % 10 != 9 and indexToshoot % 10 != 8 and indexToshoot % 10 != 7 ):
+            if player_1.my_board[indexToshoot+1]['bg'] == 'red' and player_1.my_board[indexToshoot+2]['bg'] == 'red' and player_1.my_board[indexToshoot+3].cget("text")!="":
+                return 3
+            if(indexToshoot % 10 != 9 and indexToshoot % 10 != 8 and indexToshoot % 10 != 7 and indexToshoot % 10 != 6):
+                if(player_1.my_board[indexToshoot+1]['bg'] == 'red' and player_1.my_board[indexToshoot+2]['bg'] == 'red' and player_1.my_board[indexToshoot+3]['bg'] == 'red' and player_1.my_board[indexToshoot+4].cget("text")!=""):
+                    return 4
+    return 1
+
+def validLeft(indexToshoot):
+    if(indexToshoot % 10 != 0 and indexToshoot % 10 != 1):
+        if(player_1.my_board[indexToshoot-1]['bg'] == 'red' and player_1.my_board[indexToshoot-2].cget("text")!=""):
+            return 2
+        if(indexToshoot % 10 != 0 and indexToshoot % 10 != 1 and indexToshoot % 10 != 2):
+            if player_1.my_board[indexToshoot-1]['bg'] == 'red' and player_1.my_board[indexToshoot-2]['bg'] == 'red' and player_1.my_board[indexToshoot-3].cget("text")!="":
+                return 3
+            if(indexToshoot % 10 != 0 and indexToshoot % 10 != 1 and indexToshoot % 10 != 2 and indexToshoot % 10 != 3):
+                if(player_1.my_board[indexToshoot-1]['bg'] == 'red' and player_1.my_board[indexToshoot-2]['bg'] == 'red' and player_1.my_board[indexToshoot-3]['bg'] == 'red' and player_1.my_board[indexToshoot-4].cget("text")!=""):
+                    return 4
+    return 1
 
 
 def mediumAI(root):
-        return()
-
-            
-
-
-
-
-
-
-
-
-
-    
+    assignArr()
+    global hit
+    shuffleAgain = False
+    if(hit == False):
+        while(shuffleAgain == False):
+            global indexToshoot
+            indexToshoot = random.randint(0,99)
+            if indexToshoot in hard_visited:
+                shuffleAgain = False
+            else:
+                shuffleAgain = True
+        attack(indexToshoot, "p2",root)
+        global originalHit
+        originalHit = indexToshoot
+        if(player_1.my_board[indexToshoot].cget("text") != ""):
+            hit = True
+        hard_visited.add(indexToshoot)
+        global direction
+        direction = "R"
+    else:
+        if direction == "R":
+            # indexToshoot = indexToshoot + 1
+            indexToshoot = indexToshoot + validRight(indexToshoot)
+            if(not Tried(indexToshoot) and validIndexforRight(indexToshoot)):
+                print(indexToshoot)      
+                attack(indexToshoot, "p2", root)
+                hard_visited.add(indexToshoot)
+                if(player_1.my_board[indexToshoot].cget("text") != ""):
+                    direction = "R"
+                else:
+                    direction = "L"
+                    indexToshoot = originalHit  
+            else:
+                direction = "L"
+                indexToshoot = originalHit
+                mediumAI(root)
+        
+        elif direction == "L":
+            # indexToshoot = indexToshoot - 1
+            indexToshoot = indexToshoot - validLeft(indexToshoot)
+            if(not Tried(indexToshoot) and validIndexforLeft(indexToshoot)):
+                print(indexToshoot)
+                    
+                attack(indexToshoot, "p2", root)
+                hard_visited.add(indexToshoot)
+                if(player_1.my_board[indexToshoot].cget("text") != ""):
+                    direction = "L"
+                else:
+                    direction = "U"
+                    indexToshoot = originalHit
+            else:
+                direction = "U"
+                indexToshoot = originalHit
+                mediumAI(root)
+                
+        elif direction == "U":
+            # indexToshoot = indexToshoot - 10
+            indexToshoot = indexToshoot - validUp(indexToshoot)
+            if(not Tried(indexToshoot) and indexToshoot > 0):
+                attack(indexToshoot, "p2", root)
+                hard_visited.add(indexToshoot)
+                if(player_1.my_board[indexToshoot].cget("text") != ""):
+                    direction = "U"
+                else:
+                    direction = "D"
+                    indexToshoot = originalHit
+                    
+            else:
+                direction = "D"
+                indexToshoot = originalHit
+                mediumAI(root)
+                
+        elif direction == "D":
+            # indexToshoot = indexToshoot + 10
+            indexToshoot = indexToshoot + validDown(indexToshoot)
+            if(not Tried(indexToshoot) and indexToshoot <100):
+                attack(indexToshoot, "p2", root)
+                hard_visited.add(indexToshoot)
+                if(player_1.my_board[indexToshoot].cget("text") != ""):
+                    direction = "D"
+                else:
+                    hit = False
+            else:
+                hit = False
+                mediumAI(root)
+    if(ifSunk() == True):
+        hit = False
