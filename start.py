@@ -1,4 +1,5 @@
 from tkinter import *
+import pygame 
 from tkinter.font import BOLD, Font
 from functools import partial
 from itertools import product
@@ -7,6 +8,7 @@ from ship import Ship
 from place_board import PlaceBoard
 from PIL import ImageTk, Image
 from AI import executiveAI
+
 
 def show_frame(frame): #raises a frame when called
     frame.tkraise()
@@ -353,6 +355,21 @@ def show_done_button(type): #toggles button on player 1 or player 2's screen bas
         frame7_button.configure(state=DISABLED)
         frame9_button.configure(state=NORMAL)
 
+#Sound_Effect_Method
+pygame.mixer.init()
+
+def play_hit():
+    pygame.mixer.music.load("explosion.mp3")
+    pygame.mixer.music.play(loops = 0)
+
+def play_miss():
+    pygame.mixer.music.load("splash.mp3")
+    pygame.mixer.music.play(loops = 0) 
+
+def play_win():
+    pygame.mixer.music.load("yay.mp3")
+    pygame.mixer.music.play(loops = 0) 
+
 #Attack_Method
 def attack(i, type): #playerId = "p1" or "p2"
     global player_1
@@ -596,10 +613,12 @@ def check_win(nextFrame): #checks for a win condition (after player 1's turn and
 
     if p2_lives == 0:
         show_frame(frame10) #shows frame 10
+        play_win()
         label_10_p1 = Label(frame10, text=player_1.name + " Wins!!!", font=("Arial", 60)) #label for if player 1 wins
         label_10_p1.place(relx=.5, rely=.2,anchor= CENTER)
     elif p1_lives == 0:
         show_frame(frame10), #shows frame 10
+        play_win()
         label_10_p2 = Label(frame10, text=player_2.name + " Wins!!!", font=("Arial", 60)) #label for if player 2 wins
         label_10_p2.place(relx=.5, rely=.2,anchor= CENTER)
     else:
