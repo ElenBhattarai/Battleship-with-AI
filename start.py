@@ -19,6 +19,7 @@ place_board = PlaceBoard() #initialize the board placement
 count1 = 0
 count2 = 0
 bigShot1 = False
+bigShot2 = False
 
 P1_ENEMY_CREATED = False
 P2_ENEMY_CREATED = False
@@ -357,6 +358,8 @@ def attack(i, type): #playerId = "p1" or "p2"
     global player_1
     global player_2
 
+    global player1_modifier
+    global player2_modifier
     global bigShot2
     global bigShot1
     global p1_fired
@@ -368,6 +371,7 @@ def attack(i, type): #playerId = "p1" or "p2"
         if not p1_fired:
             if(bigShot1 == True):
                 x = [(i-11),(i-10),(i-9),(i-1),(i),(i+1),(i+9),(i+10),(i+11)]
+                z = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99]
                 for y in x:
                     btn_text = player_2.my_board[y].cget("text")
                     if(btn_text == ""): #miss!
@@ -394,6 +398,11 @@ def attack(i, type): #playerId = "p1" or "p2"
                 #(i-11)(i-10)(i-9)
                 #(i-1)(i)(i+1)
                 #(i+9)(i+10)(i+11)
+                for y in x:
+                    if(y in z):
+                        z.remove(y)
+                for j in z:
+                    player_1.enemy_board[j].configure(state=NORMAL)
                 show_done_button("p1")
                 bigShot1 = False
                 p1_fired = True
@@ -422,12 +431,16 @@ def attack(i, type): #playerId = "p1" or "p2"
                         player_2.my_board[i].configure(bg="red", image=img_hit, compound=CENTER, fg = "white", state ='disabled')
                     show_done_button("p1")
                 p1_fired = True
+            player1_modifier.configure(state=DISABLED)
+            if(count2 < 2):
+                player2_modifier.configure(state=NORMAL)
         #show_frame(frame7)
     elif(type == "p2"):
         p1_fired = False
         if not p2_fired:
             if(bigShot2 == True):
                 x = [(i-11),(i-10),(i-9),(i-1),(i),(i+1),(i+9),(i+10),(i+11)]
+                z = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99]
                 for y in x:
                     btn_text = player_1.my_board[y].cget("text")
                     if(player_1.my_board[y].cget("text") == ""): #miss
@@ -450,6 +463,11 @@ def attack(i, type): #playerId = "p1" or "p2"
                         else:
                             player_2.enemy_board[y].configure(bg="red", image=img_hit, compound=CENTER, state ='disabled')   
                             player_1.my_board[y].configure(bg = "red", image=img_hit, compound=CENTER, state ='disabled')
+                for y in x:
+                    if(y in z):
+                        z.remove(y)
+                for j in z:
+                    player_2.enemy_board[j].configure(state=NORMAL)
                 show_done_button("p2")
                 bigShot2 = False
                 p2_fired = True
@@ -477,8 +495,10 @@ def attack(i, type): #playerId = "p1" or "p2"
                         player_1.my_board[i].configure(bg = "red", image=img_hit, compound=CENTER, state ='disabled')
                     show_done_button("p2")
                 p2_fired = True
+            player2_modifier.configure(state=DISABLED)
+            if(count1 < 2):
+                player1_modifier.configure(state=NORMAL)
         #show_frame(frame9)
-
 
 def modeChecker(mode):
     global game_mode
@@ -497,17 +517,22 @@ def bigShotModeChecker(player):
     global bigShot1
     global bigShot2
     if(player == "p1"):
+        x = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99]
+        for y in x:
+            player_1.enemy_board[y].configure(state=DISABLED)
+        player1_modifier.configure(state=DISABLED)
         if(count1 < 2):
-            count1+=1
             bigShot1 = True
-        else:
-            player1_modifier.configure(state=DISABLED)
+            count1+=1
     if(player == "p2"):
+        x = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99]
+        for y in x:
+            player_2.enemy_board[y].configure(state=DISABLED)
+        player2_modifier.configure(state=DISABLED)
         if(count2 < 2):
-            count2+=1
             bigShot2 = True
-        else:
-            player2_modifier.configure(state=DISABLED)
+            count2+=1
+
         
 
 def bigShotMode():
@@ -517,6 +542,10 @@ def bigShotMode():
     player1_modifier.grid(row=5, column=12)
     player2_modifier = Button(frame9, text="Big Shot", fg='black', bg='white', padx=20,pady=20, state=NORMAL, command=partial(bigShotModeChecker,"p2"))
     player2_modifier.grid(row=5, column=12)
+    if(count1 == 2):
+        player1_modifier.configure(state=DISABLED)
+    if(count2 == 2):
+        player2_modifier.configure(state=DISABLED)
 
 def game_choice(Modify):
     global modifier
