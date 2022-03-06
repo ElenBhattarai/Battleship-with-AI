@@ -542,10 +542,6 @@ def bigShotMode():
     player1_modifier.grid(row=5, column=12)
     player2_modifier = Button(frame9, text="Big Shot", fg='black', bg='white', padx=20,pady=20, state=NORMAL, command=partial(bigShotModeChecker,"p2"))
     player2_modifier.grid(row=5, column=12)
-    if(count1 == 2):
-        player1_modifier.configure(state=DISABLED)
-    if(count2 == 2):
-        player2_modifier.configure(state=DISABLED)
 
 def game_choice(Modify):
     global modifier
