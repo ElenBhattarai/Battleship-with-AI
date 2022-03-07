@@ -35,7 +35,7 @@ We apply the [Agile](https://en.wikipedia.org/wiki/Agile_software_development) m
 
 So, we estimated **Project 2** to be **13** story points.
 
-We estimated from our previous labs and projects that **1 story point** is equivalent to **2 hours**.
+We estimated from our previous labs and projects that **1 story point** is equivalent to **2 hours**. We put out all the time period that we took for each one of the projects and labs that we have mentioned above and then decided that one story point would be equivalent to 2 hours.
 
 Therefore our total number of estimated hours for project 2 is **26 hours**!
 
