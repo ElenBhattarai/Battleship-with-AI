@@ -37,6 +37,6 @@ So, we estimated **Project 2** to be **13** story points.
 
 We estimated from our previous labs and projects that **1 story point** is equivalent to **2 hours**.
 
-Therefore our total number of hours for project 2 is **26 hours**!
+Therefore our total number of estimated hours for project 2 is **26 hours**!
 
 [return to main page.](README.md)
