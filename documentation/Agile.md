@@ -29,10 +29,14 @@ We apply the [Agile](https://en.wikipedia.org/wiki/Agile_software_development) m
 
 | -- 1 -- | -- 2 -- | -- 3 -- | -- 5 -- | -- 8 -- | -- 13 -- |
 | :--: | :--: | :--: | :--: | :--: | :--: |
-| "Hello world"	| Loops	| Data sets	| DMV`(baseline)` | Browser |	Sorts |
+| "Hello world"	| Loops	| Data sets	| DMV | Browser |	Sorts |
 | FizzBuzz | 2D Arrays | Shapes | Classes | Board Games | Elevator | Binary Search Tree |
 | Grid | Taco Shop Code | Tab Panel | Shape Container | Maze | Battleship |
 
-Our Baseline is **5 hours**, therefore our total number of hours is **27 hours**!
+So, we estimated project 2 to be 13 story points.
+
+We estimated from our previous labs and projects that 1 story point is equivalent to 2 hours.
+
+Therefore our total number of hours for project 2 is **26 hours**!
 
 [return to main page.](README.md)
