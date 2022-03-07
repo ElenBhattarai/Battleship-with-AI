@@ -14,9 +14,9 @@ https://docs.google.com/spreadsheets/d/14TVavpWyMe4Ca8RJaMoFXq4gPhU7NrfNuMa5_Ew3
 
 ## Estimated vs. Actual hours
 
-| **Estimated** | **Actual** | **Difference** |
+| **Estimated (task breakdown / agile method)** | **Actual** | **Difference** |
 | :--: | :--: | :--: |
-| Total hours: `32 hours` | Total hours: `71 hours` | Underestimated by: `39 hours` |
+| Total hours: (`32 hours` / `26 hours`) | Total hours: `71 hours` | Underestimated by: (`39 hours` / `45 hours`) |
 
 >Note: Time estimates as of (03/06/2022 code freeze).
 

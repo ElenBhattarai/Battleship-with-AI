@@ -16,3 +16,4 @@ Here is our proposed collection of features:
 - Add Multi shot as modifier to be selected
 - Add scan as modifier to be selected
 
+[return to main page.](README.md)
