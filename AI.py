@@ -664,11 +664,6 @@ def attackAI(game,root):
 
 
 def easyAI(root):
-    print(player_2.ships["A"].positions)
-    print(player_2.ships["B"].positions)
-    print(player_2.ships["C"].positions)
-    print(player_2.ships["D"].positions)
-    print(player_2.ships["E"].positions)
     shuffleAgain = False
     while(shuffleAgain == False):
         indexToshoot = random.randint(0,99)
