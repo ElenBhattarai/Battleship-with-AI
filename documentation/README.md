@@ -69,6 +69,8 @@ The AI gamemode has three different difficulties:
 
 We then were tasked with implementing new custom features of our own choice.
 
+These features were initially proposed in our [Required Engineering Artifact](REA.md) document.
+
 - Big Shot Modifier
     >Enables an attack that hits a `(3x3)` area of shots.
     
