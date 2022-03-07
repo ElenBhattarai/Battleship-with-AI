@@ -18,9 +18,9 @@ num_ships = 0
 player_1 = Player("Player 1") #initialize player_1
 player_2 = Player("Player 2") #initialize player_2
 place_board = PlaceBoard() #initialize the board placement
-count1 = 0
-count2 = 0
-bigShot1 = False
+count1 = 0 #initialize player_1's mutili shots
+count2 = 0 #initialize player_2's mutli shots
+bigShot1 = False 
 bigShot2 = False
 player1_Tracker = [300]
 player2_Tracker = [300]
@@ -392,11 +392,11 @@ def attack(i, type): #playerId = "p1" or "p2"
         p2_fired = False
         if not p1_fired:
             if(bigShot1 == True):
-                x = [(i-11),(i-10),(i-9),(i-1),(i),(i+1),(i+9),(i+10),(i+11)]
+                x = [(i-11),(i-10),(i-9),(i-1),(i),(i+1),(i+9),(i+10),(i+11)] #3 by 3 shot
 
-                z = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99]
+                z = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99] #outer ring
                 
-                for l in player1_Tracker:
+                for l in player1_Tracker: #removes all previously hit coordinates
                     if(l in x):
                         x.remove(l)
                 for y in x:
@@ -429,10 +429,10 @@ def attack(i, type): #playerId = "p1" or "p2"
                 #(i-11)(i-10)(i-9)
                 #(i-1)(i)(i+1)
                 #(i+9)(i+10)(i+11)
-
+                #coordinates for 3 by 3 shot
                 a = False
 
-                for r in x:
+                for r in x:#plays sound based on hit or miss
                     if player_2.my_board[r]['bg'] == 'red' or player_2.my_board[r]['bg'] == 'black':
                         a = True
 
@@ -442,7 +442,7 @@ def attack(i, type): #playerId = "p1" or "p2"
                     play_hit()
             
 
-                for y in x:
+                for y in x: #re-enables all non hit or miss outer ring buttons
                     if(y in z):
                         z.remove(y)
                 for j in z:
@@ -479,17 +479,17 @@ def attack(i, type): #playerId = "p1" or "p2"
                     show_done_button("p1")
                 p1_fired = True
             player1_modifier.configure(state=DISABLED)
-            if(count2 < 2):
+            if(count2 < 2): #limits player to 2 big shots
                 player2_modifier.configure(state=NORMAL)
         #show_frame(frame7)
     elif(type == "p2"):
         p1_fired = False
         if not p2_fired:
             if(bigShot2 == True):
-                x = [(i-11),(i-10),(i-9),(i-1),(i),(i+1),(i+9),(i+10),(i+11)]
-                z = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99]
+                x = [(i-11),(i-10),(i-9),(i-1),(i),(i+1),(i+9),(i+10),(i+11)] #intializes all spots of 3 by 3 shot
+                z = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99] #outer ring
                 
-                for g in player2_Tracker:
+                for g in player2_Tracker: #removes hit if already hit
                     if(g in x):
                         x.remove(g)
                 for y in x:
@@ -521,7 +521,7 @@ def attack(i, type): #playerId = "p1" or "p2"
 
                 a = False
 
-                for r in x:
+                for r in x: #plays sounds based on hit or miss
                     if player_1.my_board[r]['bg'] == 'red' or player_1.my_board[r]['bg'] == 'black':
                         a = True
 
@@ -530,7 +530,7 @@ def attack(i, type): #playerId = "p1" or "p2"
                 else:
                     play_hit()
 
-                for y in x:
+                for y in x: #renables all non miss or hit buttons on outer ring
                     if(y in z):
                         z.remove(y)
                 for j in z:
@@ -566,16 +566,16 @@ def attack(i, type): #playerId = "p1" or "p2"
                     show_done_button("p2")
                 p2_fired = True
             player2_modifier.configure(state=DISABLED)
-            if(count1 < 2):
+            if(count1 < 2): #limits player to 2 big shots
                 player1_modifier.configure(state=NORMAL)
         #show_frame(frame9)
 
-def modeChecker(mode):
+def modeChecker(mode): #checks mode
     global game_mode
     game_mode = mode
     show_frame(frame12)
 
-def modeChecker(mode):
+def modeChecker(mode): #checks mode for PvP or PvE
     global game_mode
     game_mode = mode
     if game_mode == "PVP":
@@ -584,7 +584,7 @@ def modeChecker(mode):
         #show_frame(frame13)
         executiveAI(root)    
 
-def bigShotModeChecker(player):
+def bigShotModeChecker(player): #checks which player selected big shot
     global count1
     global count2
     global player1_modifier
@@ -593,18 +593,18 @@ def bigShotModeChecker(player):
     global bigShot2
     if(player == "p1"):
         x = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99]
-        for y in x:
+        for y in x: #disables outer ring of buttons
             player_1.enemy_board[y].configure(state=DISABLED)
-        player1_modifier.configure(state=DISABLED)
-        if(count1 < 2):
+        player1_modifier.configure(state=DISABLED) #disables big shot button on press
+        if(count1 < 2): #limits player to 2 shots
             bigShot1 = True
             count1+=1
     if(player == "p2"):
         x = [0,1,2,3,4,5,6,7,8,9,10,19,20,29,30,39,40,49,50,59,60,69,70,79,80,89,90,91,92,93,94,95,96,97,98,99]
-        for y in x:
+        for y in x: #disables big shot button on press
             player_2.enemy_board[y].configure(state=DISABLED)
         player2_modifier.configure(state=DISABLED)
-        if(count2 < 2):
+        if(count2 < 2): #limits player to 2 shots
             bigShot2 = True
             count2+=1
 
@@ -612,7 +612,7 @@ def bigShotMode():
     global player1_modifier
     global player2_modifier
     player1_modifier = Button(frame7, text="Big Shot", fg='black', bg='white', padx=20,pady=20, state=NORMAL, command=partial(bigShotModeChecker,"p1"))
-    player1_modifier.grid(row=5, column=12)
+    player1_modifier.grid(row=5, column=12) #creates big shot button and places on respective interfaces
     player2_modifier = Button(frame9, text="Big Shot", fg='black', bg='white', padx=20,pady=20, state=NORMAL, command=partial(bigShotModeChecker,"p2"))
     player2_modifier.grid(row=5, column=12)
 
@@ -620,8 +620,7 @@ def game_choice(Modify):
     global modifier
     modifier = Modify
     if(modifier == "Modifier"):
-        bigShotMode()
-    #executive big shot modifier
+        bigShotMode() #executive big shot modifier
     show_frame(frame2)
 
 
